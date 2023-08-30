@@ -2,6 +2,6 @@
 
 public class StatusSetDto
 {
-    public required string Id { get; set; }
+    public int Id { get; set; }
     public required string NewStatus { get; set; }
 }

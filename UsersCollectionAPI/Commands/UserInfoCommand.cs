@@ -1,5 +1,7 @@
 ﻿using UsersCollectionAPI.Model.Entities;
 using UsersCollectionAPI.Services.Interfaces;
+using UsersCollectionAPI.Utils;
+using ApplicationException = UsersCollectionAPI.Model.Exceptions.ApplicationException;
 
 namespace UsersCollectionAPI.Commands;
 
@@ -14,7 +16,14 @@ public class UserInfoCommand : ICommand<int, string>
         
     public string Execute(int userId)
     {
-        User? user = _userService.GetByIdAsync(userId);
-        return _userService.GenerateUserInfoHtmlResponse(user);
+        try
+        {
+            User user = _userService.GetByIdAsync(userId);
+            return Constants.SuccessfulHtmlResponse(user);
+        }
+        catch (ApplicationException ex)
+        {
+            return Constants.ErrorHtmlResponse(ex);
+        }
     }
 }

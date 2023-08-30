@@ -1,6 +1,7 @@
 ﻿using UsersCollectionAPI.Model.Dto;
-using UsersCollectionAPI.Model.Exceptions;
 using UsersCollectionAPI.Services.Interfaces;
+using UsersCollectionAPI.Utils;
+using ApplicationException = UsersCollectionAPI.Model.Exceptions.ApplicationException;
 
 namespace UsersCollectionAPI.Commands;
 
@@ -19,11 +20,25 @@ public class UserCreateCommand : ICommandAsync<UserCreateXmlRequestDto, string>
         try
         {
             await _userService.CreateAsync(dto.User);
-            response = _userService.GenerateUserCreationSuccessXmlResponse(dto.User);
+            UserResponseDto userResponse = new UserResponseDto
+            {
+                Success = true,
+                ErrorId = Constants.OkXmlResponseCode,
+                User = dto.User
+            };
+
+            response = new CustomXmlSerializer<UserResponseDto>().Serialize(userResponse);
         }
-        catch (UserDuplicateException ex)
+        catch (ApplicationException ex)
         {
-            response = _userService.GenerateUserCreationErrorXmlResponse(ex);
+            UserResponseDto userResponse = new UserResponseDto
+            {
+                Success = false,
+                ErrorId = ex.ExceptionId,
+                Message = ex.Message
+            };
+
+            response = new CustomXmlSerializer<UserResponseDto>().Serialize(userResponse);
         }
         return response;
     }

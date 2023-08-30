@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using UsersCollectionAPI.Commands;
 using UsersCollectionAPI.Model.Dto;
-using UsersCollectionAPI.Services.Interfaces;
 
 namespace UsersCollectionAPI.Controllers;
 
@@ -12,19 +11,18 @@ public class UserController : ControllerBase
     private readonly UserCreateCommand _userCreateCommand;
     private readonly UserInfoCommand _userInfoCommand;
     private readonly UserRemoveCommand _userRemoveCommand;
-
-    private readonly IUserService _userService;
+    private readonly StatusSetCommand _statusSetCommand;
 
     public UserController(
         UserCreateCommand userCreateCommand,
         UserInfoCommand userInfoCommand,
         UserRemoveCommand userRemoveCommand,
-        IUserService userService)
+        StatusSetCommand statusSetCommand)
     {
         _userCreateCommand = userCreateCommand;
         _userInfoCommand = userInfoCommand;
         _userRemoveCommand = userRemoveCommand;
-        _userService = userService;
+        _statusSetCommand = statusSetCommand;
     }
 
     [HttpGet]
@@ -65,7 +63,7 @@ public class UserController : ControllerBase
     [Route("Auth/SetStatus")]
     public async Task<IActionResult> SetStatus([FromForm] StatusSetDto dto)
     {
-        UserRequestDto response = await _userService.SetStatusAsync(dto);
+        UserRequestDto? response = await _statusSetCommand.ExecuteAsync(dto);
         return new JsonResult(response);
     }
 }

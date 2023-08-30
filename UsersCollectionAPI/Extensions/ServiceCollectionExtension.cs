@@ -14,6 +14,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<UserCreateCommand>();
         services.AddScoped<UserInfoCommand>();
         services.AddScoped<UserRemoveCommand>();
+        services.AddScoped<StatusSetCommand>();
     }
 
     public static void AddUserServices(this IServiceCollection services)

@@ -1,6 +1,8 @@
 ﻿using UsersCollectionAPI.Model.Dto;
 using UsersCollectionAPI.Model.Entities;
 using UsersCollectionAPI.Services.Interfaces;
+using UsersCollectionAPI.Utils;
+using ApplicationException = UsersCollectionAPI.Model.Exceptions.ApplicationException;
 
 namespace UsersCollectionAPI.Commands;
 
@@ -16,28 +18,30 @@ public class UserRemoveCommand : ICommandAsync<UserRemoveDto, UserResponseDto>
     public async Task<UserResponseDto> ExecuteAsync(UserRemoveDto dto)
     {
         int id = dto.RemoveUser.Id;
-        
-        User? removedUser = await _userService.RemoveAsync(id);
 
-        if (removedUser == null)
+        try
+        {
+            User removedUser = await _userService.RemoveAsync(id);
+            
+            return new UserResponseDto
+            { 
+                Success = true, 
+                Message = Constants.SuccessfulUserRemoveMessage, 
+                User = new UserRequestDto{
+                    Id = removedUser.Id,
+                    Name = removedUser.Name,
+                    Status = removedUser.Status.ToString() 
+                } 
+            };
+        }
+        catch (ApplicationException ex)
         {
             return new UserResponseDto
             {
                 Success = false,
-                ErrorId = 2,
-                Message = $"User with id {id} not found"
+                ErrorId = ex.ExceptionId,
+                Message = ex.Message
             };
         }
-
-        return new UserResponseDto
-        { 
-            Success = true, 
-            Message = "User was removed", 
-            User = new UserRequestDto{
-                Id = removedUser.Id,
-                Name = removedUser.Name,
-                Status = removedUser.Status.ToString() 
-            } 
-        };
     }
 }
