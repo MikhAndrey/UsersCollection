@@ -11,4 +11,12 @@ public class CustomXmlSerializer<T> where T: class
         string xmlString = stringWriter.ToString();
         return xmlString;
     }
+
+    public T Deserialize(string xml)
+    {
+        XmlSerializer serializer = new XmlSerializer(typeof(T));
+        using StringReader reader = new StringReader(xml);
+        T response = (T)serializer.Deserialize(reader)!;
+        return response;
+    }
 }

@@ -29,7 +29,7 @@ public class UserService : IUserService
 
     public async Task CreateAsync(UserRequestDto user)
     {
-        if (_unitOfWork.Users.Exists(user.Id))
+        if (_unitOfWork.Users.ExistsOrDeleted(user.Id))
             throw new UserDuplicateException(Constants.UserDuplicateDefaultMessage(user.Id));
         
         User userToAdd = new User

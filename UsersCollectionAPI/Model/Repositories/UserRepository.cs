@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
         return user;
     }
     
-    public bool Exists(int id)
+    public bool ExistsOrDeleted(int id)
     {
         return _users.IgnoreQueryFilters().Any(u => u.Id == id);
     }

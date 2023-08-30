@@ -37,6 +37,10 @@ public class UserHttpManager
         
         string responseXml = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"Response:\n{responseXml}");
+        
+        UserResponseDto result = new CustomXmlSerializer<UserResponseDto>().Deserialize(responseXml);
+        if (!result.Success)
+            Console.WriteLine($"Error: {result.Message}");
     }
     
     public async Task RemoveUser(UserRemoveDto user)
@@ -51,6 +55,10 @@ public class UserHttpManager
         
         string responseAsString = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"Response:\n{responseAsString}");
+        
+        UserResponseDto result = JsonSerializer.Deserialize<UserResponseDto>(responseAsString)!;
+        if (!result.Success)
+            Console.WriteLine($"Error: {result.Message}");
     }
     
     public async Task GetUserById(int id)
