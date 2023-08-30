@@ -20,7 +20,7 @@ public class StatusSetCommand : ICommandAsync<StatusSetDto, UserRequestDto?>
             UserRequestDto response = await _userService.SetStatusAsync(dto);
             return response;
         }
-        catch (ApplicationException ex)
+        catch (ApplicationException)
         {
             return null;
         }
