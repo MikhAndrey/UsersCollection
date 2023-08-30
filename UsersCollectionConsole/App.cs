@@ -8,7 +8,7 @@ public static class App
     public static string UserName;
     public static string UserPassword;
 
-    public static async void Run()
+    public static async Task Run()
     {
         UserConsoleReader consoleReader = new();
         UserHttpManager httpManager = new();

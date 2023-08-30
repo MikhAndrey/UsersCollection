@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using UsersCollectionAPI.Model.Dto;
 using UsersCollectionAPI.Utils;
 
@@ -44,6 +45,8 @@ public class UserHttpManager
         HttpClient client = new HttpClient().ConfigureBasicAuthHeader(endpoint);
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonFormatHeaderAlias));
         
+        string requestBody = JsonSerializer.Serialize(user);
+        Console.WriteLine($"Request:\n{requestBody}");
         HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, user);
         
         string responseAsString = await response.Content.ReadAsStringAsync();

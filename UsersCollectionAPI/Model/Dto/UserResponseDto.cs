@@ -12,10 +12,12 @@ public class UserResponseDto
     
     [XmlAttribute("ErrorId")]
     [JsonPropertyName("ErrorId")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int ErrorId { get; set; }
     
     [XmlElement("user")]
     [JsonPropertyName("user")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public UserRequestDto? User { get; set; }
     
     [XmlElement("ErrorMsg")]

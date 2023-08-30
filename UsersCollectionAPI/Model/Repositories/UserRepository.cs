@@ -24,10 +24,10 @@ public class UserRepository : IUserRepository
         User? user = await _users.FindAsync(id);
         return user;
     }
-
+    
     public bool Exists(int id)
     {
-        return _users.Any(u => u.Id == id);
+        return _users.IgnoreQueryFilters().Any(u => u.Id == id);
     }
 
     public async Task AddAsync(User user)
