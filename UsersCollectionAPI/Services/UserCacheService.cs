@@ -27,7 +27,7 @@ public class UserCacheService
 
     public void Init()
     {
-        UpdateCache();
+        ReloadCache();
     }
 
     public User? GetItem(int id)
@@ -50,11 +50,13 @@ public class UserCacheService
 
     private void TimerElapsed(object? sender, ElapsedEventArgs e)
     {
-        UpdateCache();
+        ReloadCache();
     }
 
-    private void UpdateCache()
+    private void ReloadCache()
     {
+        _userCache.Clear();
+        
         using var scope = _serviceScopeFactory.CreateScope();
         
         IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
