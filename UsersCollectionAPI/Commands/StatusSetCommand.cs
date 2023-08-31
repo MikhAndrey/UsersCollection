@@ -4,7 +4,7 @@ using ApplicationException = UsersCollectionAPI.Model.Exceptions.ApplicationExce
 
 namespace UsersCollectionAPI.Commands;
 
-public class StatusSetCommand : ICommandAsync<StatusSetDto, UserResponseDto>
+public class StatusSetCommand : ICommandAsync<StatusSetDto, UserRequestDto?>
 {
     private readonly IUserService _userService;
 
@@ -13,24 +13,16 @@ public class StatusSetCommand : ICommandAsync<StatusSetDto, UserResponseDto>
         _userService = userService;
     }
     
-    public async Task<UserResponseDto> ExecuteAsync(StatusSetDto dto)
+    public async Task<UserRequestDto?> ExecuteAsync(StatusSetDto dto)
     {
         try
         {
             UserRequestDto response = await _userService.SetStatusAsync(dto);
-            return new()
-            {
-                User = response
-            };
+            return response;
         }
-        catch (ApplicationException ex)
+        catch (ApplicationException)
         {
-            return new()
-            {
-                Success = false,
-                ErrorId = ex.ExceptionId,
-                Message = ex.Message
-            };
+            return null;
         }
     }
 }

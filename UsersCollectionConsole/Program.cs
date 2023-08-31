@@ -1,3 +1,3 @@
 ﻿using UsersCollectionConsole;
 
-App.Run().Wait();
+App.RunAsync().Wait();

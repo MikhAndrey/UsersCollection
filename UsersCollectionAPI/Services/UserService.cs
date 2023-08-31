@@ -18,9 +18,9 @@ public class UserService : IUserService
         _userCacheService = userCacheService;
     }
 
-    public User GetByIdAsync(int id)
+    public User GetById(int id)
     {
-        User? user = _userCacheService.Get(id);
+        User? user = _userCacheService.GetItem(id);
         if (user == null)
             throw new UserNotFoundException(Constants.UserNotFoundDefaultMessage(id));
         
@@ -42,7 +42,7 @@ public class UserService : IUserService
         await _unitOfWork.Users.AddAsync(userToAdd);
         await _unitOfWork.SaveAsync();
         
-        _userCacheService.Update(userToAdd);
+        _userCacheService.UpdateCache(userToAdd);
     }
 
     public async Task<User> RemoveAsync(int id)
@@ -54,7 +54,7 @@ public class UserService : IUserService
         _unitOfWork.Users.Remove(userToRemove);
         await _unitOfWork.SaveAsync();
         
-        _userCacheService.Remove(id);
+        _userCacheService.RemoveFromCache(id);
         
         return userToRemove;
     }
@@ -67,6 +67,8 @@ public class UserService : IUserService
         
         user.Status = (Status)Enum.Parse(typeof(Status), dto.NewStatus);
         await _unitOfWork.SaveAsync();
+        
+        _userCacheService.UpdateCache(user);
        
         return new UserRequestDto
         {

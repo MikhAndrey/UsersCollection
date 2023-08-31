@@ -11,7 +11,7 @@ public static class HttpClientExtension
     {
         if (endpoint.Contains(BasicAuthIndicator))
         {
-            string authString = $"{App.UserName}:{App.UserPassword}";
+            string authString = $"{UserActionManager.UserName}:{UserActionManager.UserPassword}";
             string base64AuthString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authString));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64AuthString);
         }

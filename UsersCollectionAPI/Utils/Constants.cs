@@ -12,8 +12,6 @@ public static class Constants
         { typeof(UserNotFoundException), 2 }
     };
 
-    public const int CacheUpdateInterval = 10 * 60 * 1000;
-
     public static readonly Func<int, string> UserDuplicateDefaultMessage = id => $"User with id {id} already exists";
     public static readonly Func<int, string> UserNotFoundDefaultMessage = id => $"User with id {id} not found";
     
@@ -31,6 +29,4 @@ public static class Constants
                                                                                         "</html>";
 
     public const string SuccessfulUserRemoveMessage = "User was removed";
-
-    public const int OkXmlResponseCode = 0;
 }

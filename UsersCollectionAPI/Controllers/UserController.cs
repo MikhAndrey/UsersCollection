@@ -63,7 +63,7 @@ public class UserController : ControllerBase
     [Route("Auth/SetStatus")]
     public async Task<IActionResult> SetStatus([FromForm] StatusSetDto dto)
     {
-        UserResponseDto response = await _statusSetCommand.ExecuteAsync(dto);
-        return response.User != null ? new JsonResult(response.User) : new JsonResult(response);
+        UserRequestDto? response = await _statusSetCommand.ExecuteAsync(dto);
+        return new JsonResult(response);
     }
 }

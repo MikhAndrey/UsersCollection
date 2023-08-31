@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using UsersCollectionAPI.Model.Dto;
@@ -22,7 +21,7 @@ public class UserHttpManager
     private const string FormUrlEncodedUserIdAlias = "Id";
     private const string FormUrlEncodedNewStatusAlias = "NewStatus";
 
-    public async Task CreateUser(UserCreateXmlRequestDto user)
+    public async Task<UserResponseDto> CreateUserAsync(UserCreateXmlRequestDto user)
     {
         const string endpoint = BaseApiUrl + UserCreateEndpoint;
         HttpClient client = new HttpClient().ConfigureBasicAuthHeader(endpoint);
@@ -32,36 +31,37 @@ public class UserHttpManager
         
         HttpContent body = new StringContent(xml, Encoding.UTF8, XmlFormatHeaderAlias);
         string bodyAsString = await body.ReadAsStringAsync();
-        Console.WriteLine($"Request:\n{bodyAsString}");
+        Console.WriteLine($"Request:\n{bodyAsString}\n");
         HttpResponseMessage response = await client.PostAsync(endpoint, body);
         
         string responseXml = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"Response:\n{responseXml}");
         
         UserResponseDto result = new CustomXmlSerializer<UserResponseDto>().Deserialize(responseXml);
-        if (!result.Success)
-            Console.WriteLine($"Error: {result.Message}");
+        return result;
     }
     
-    public async Task RemoveUser(UserRemoveDto user)
+    public async Task<UserResponseDto> RemoveUserAsync(UserRemoveDto user)
     {
         const string endpoint = BaseApiUrl + UserRemoveEndpoint;
         HttpClient client = new HttpClient().ConfigureBasicAuthHeader(endpoint);
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonFormatHeaderAlias));
         
         string requestBody = JsonSerializer.Serialize(user);
-        Console.WriteLine($"Request:\n{requestBody}");
-        HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, user);
+        
+        HttpContent body = new StringContent(requestBody, Encoding.UTF8, JsonFormatHeaderAlias);
+        string bodyAsString = await body.ReadAsStringAsync();
+        Console.WriteLine($"Request:\n{bodyAsString}\n");
+        HttpResponseMessage response = await client.PostAsync(endpoint, body);
         
         string responseAsString = await response.Content.ReadAsStringAsync();
-        Console.WriteLine($"Response:\n{responseAsString}");
+        Console.WriteLine($"Response:\n{responseAsString}\n");
         
         UserResponseDto result = JsonSerializer.Deserialize<UserResponseDto>(responseAsString)!;
-        if (!result.Success)
-            Console.WriteLine($"Error: {result.Message}");
+        return result;
     }
     
-    public async Task GetUserById(int id)
+    public async Task GetUserByIdAsync(int id)
     {
         string endpoint = BaseApiUrl + _getUserInfoEndpoint(id);
         HttpClient client = new HttpClient().ConfigureBasicAuthHeader(endpoint);
@@ -69,10 +69,10 @@ public class UserHttpManager
         HttpResponseMessage response = await client.GetAsync(endpoint);
         
         string responseAsString = await response.Content.ReadAsStringAsync();
-        Console.WriteLine($"Response:\n{responseAsString}");
+        Console.WriteLine($"Response:\n{responseAsString}\n");
     }
 
-    public async Task SetStatus(int userId, string status)
+    public async Task SetStatusAsync(int userId, string status)
     {
         const string endpoint = BaseApiUrl + SetStatusEndpoint;
         HttpClient client = new HttpClient().ConfigureBasicAuthHeader(endpoint);
@@ -85,7 +85,7 @@ public class UserHttpManager
         });
         HttpResponseMessage response = await client.PostAsync(endpoint, content);
 
-        string responseString = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(responseString);
+        string responseAsString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Response:\n{responseAsString}\n");
     }
 }

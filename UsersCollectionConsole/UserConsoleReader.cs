@@ -23,7 +23,7 @@ public class UserConsoleReader
     private const string EmptyCurrentUserNameWarningMessage =
         "Your name must be a non-empty string and shouldn't include only whitespaces";
     private const string EmptyCurrentUserPasswordWarningMessage =
-        "Your name must be a non-empty string and shouldn't include only whitespaces";
+        "Your password must be a non-empty string and shouldn't include only whitespaces";
     
     public User ReadUser()
     {
@@ -41,23 +41,11 @@ public class UserConsoleReader
         return user;
     }
 
-    public int ReadUserIdForRemoveUser()
-    {
-        int id = ReadUserId(EnterUserIdWhenRemoveUserMessage);
-        return id;
-    }
-    
-    public int ReadUserIdForUserInfo()
-    {
-        int id = ReadUserId(EnterUserIdWhenGetUserInfoMessage);
-        return id;
-    }
-    
-    public int ReadUserIdForSetStatus()
-    {
-        int id = ReadUserId(EnterUserIdWhenChangeUserStatusMessage);
-        return id;
-    }
+    public int ReadUserIdForRemoveUser() => ReadUserId(EnterUserIdWhenRemoveUserMessage);
+
+    public int ReadUserIdForUserInfo() => ReadUserId(EnterUserIdWhenGetUserInfoMessage);
+
+    public int ReadUserIdForSetStatus() => ReadUserId(EnterUserIdWhenChangeUserStatusMessage);
 
     public Status ReadUserStatus()
     {
@@ -76,7 +64,7 @@ public class UserConsoleReader
         }
     }
 
-    public (string userName, string password) ReadUserCredentials()
+    public (string, string) ReadUserCredentials()
     {
         string userName = ReadNonEmptyString(EnterCurrentUserNameMessage, EmptyCurrentUserNameWarningMessage);
         string password = ReadNonEmptyString(EnterCurrentUserPasswordMessage, EmptyCurrentUserPasswordWarningMessage);
@@ -99,11 +87,7 @@ public class UserConsoleReader
         }
     }
     
-    private string ReadUserName()
-    {
-        string userName = ReadNonEmptyString(EnterUserNameStandardMessage, EmptyUserNameWarningMessage);
-        return userName;
-    }
+    private string ReadUserName() => ReadNonEmptyString(EnterUserNameStandardMessage, EmptyUserNameWarningMessage);
 
     private int ReadUserId(string consoleMessage)
     {

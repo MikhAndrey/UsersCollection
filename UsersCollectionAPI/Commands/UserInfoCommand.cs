@@ -18,7 +18,7 @@ public class UserInfoCommand : ICommand<int, string>
     {
         try
         {
-            User user = _userService.GetByIdAsync(userId);
+            User user = _userService.GetById(userId);
             return Constants.SuccessfulHtmlResponse(user);
         }
         catch (ApplicationException ex)

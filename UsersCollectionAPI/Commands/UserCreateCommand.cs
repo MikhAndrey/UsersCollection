@@ -8,6 +8,8 @@ namespace UsersCollectionAPI.Commands;
 public class UserCreateCommand : ICommandAsync<UserCreateXmlRequestDto, string>
 {
     private readonly IUserService _userService;
+    
+    private const int OkXmlResponseErrorId = 0;
 
     public UserCreateCommand(IUserService userService)
     {
@@ -17,13 +19,14 @@ public class UserCreateCommand : ICommandAsync<UserCreateXmlRequestDto, string>
     public async Task<string> ExecuteAsync(UserCreateXmlRequestDto dto)
     {
         string response;
+        
         try
         {
             await _userService.CreateAsync(dto.User);
             UserResponseDto userResponse = new UserResponseDto
             {
                 Success = true,
-                ErrorId = Constants.OkXmlResponseCode,
+                ErrorId = OkXmlResponseErrorId,
                 User = dto.User
             };
 
@@ -40,6 +43,7 @@ public class UserCreateCommand : ICommandAsync<UserCreateXmlRequestDto, string>
 
             response = new CustomXmlSerializer<UserResponseDto>().Serialize(userResponse);
         }
+        
         return response;
     }
 }
